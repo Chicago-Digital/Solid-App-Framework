@@ -1,10 +1,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-{% include "/_System/apps/solid-app-framework/_assets/app/_head.inc" %}
+{% assign findAppKey = globals.get.ID | remove: "/_system/apps/" | split: "/" -%}
+{% assign appKey = findAppKey[0] -%}
+{% include "/_System/apps/{{appKey}}/_assets/app/_head.inc" -%}
 </head>
-<body class="pages">
-{% include "/_System/apps/solid-app-framework/_assets/app/_tabs.inc" %}
+<body class="pages" data-appKey="{{appKey}}">
+{% include "/_System/apps/{{appKey}}/_assets/app/_tabs.inc" %}
 <div id="container-body">
   <h1><span>Page Meta Data</span></h1>
   <div class="pageBodyLoading hide"><p>Loading Items</p></div>
@@ -29,7 +31,7 @@
     <button class="refresh-app btn call-to-action">Refresh Data</button>
   </div>
   <h1 id="totalPageIssues"><span class="noPadding">Total Page Issues</span><span class="errorCount"></span></h1>
-  {% include "/_System/apps/solid-app-framework/_assets/app/page-issues.inc" %}
+  {% include "/_System/apps/{{appKey}}/_assets/app/page-issues.inc" %}
 </div>
 	</div>
 </body>

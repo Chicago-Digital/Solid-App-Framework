@@ -1,10 +1,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-{% include "/_System/apps/solid-app-framework/_assets/app/_head.inc" %}
+{% assign findAppKey = globals.get.ID | remove: "/_system/apps/" | split: "/" -%}
+{% assign appKey = findAppKey[0] -%}
+{% include "/_System/apps/{{appKey}}/_assets/app/_head.inc" -%}
 </head>
-<body>
-{% include "/_System/apps/solid-app-framework/_assets/app/_tabs.inc" %}
+<body data-appKey="{{appKey}}">
+{% include "/_System/apps/{{appKey}}/_assets/app/_tabs.inc" %}
 <div id="container-body">
   <h1><span>{{appManifest.name}} Settings</span></h1>
   <form id="appSettingsForm">
@@ -24,7 +26,7 @@
       <input type="submit" value="Save"/>
       <span id="confirmation"></span> </p>
   </form>
-{% include "/_System/apps/solid-app-framework/_assets/app/_delete.inc" %}
+{% include "/_System/apps/{{appKey}}/_assets/app/_delete.inc" %}
 </div>
 </body>
 </html>

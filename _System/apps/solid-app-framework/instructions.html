@@ -1,10 +1,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-{% include "/_System/apps/solid-app-framework/_assets/app/_head.inc" %}
+{% assign findAppKey = globals.get.ID | remove: "/_system/apps/" | split: "/" -%}
+{% assign appKey = findAppKey[0] -%}
+{% include "/_System/apps/{{appKey}}/_assets/app/_head.inc" -%}
 </head>
-<body>
-{% include "/_System/apps/solid-app-framework/_assets/app/_tabs.inc" %}
+<body data-appKey="{{appKey}}">
+{% include "/_System/apps/{{appKey}}/_assets/app/_tabs.inc" %}
 <div id="container-body">
   <h1><span>{{appManifest.name}} - Version {{appManifest.version}}</span></h1>
   <h2>Description</h2>
@@ -27,7 +29,7 @@
   <h2>Limitations</h2>
 	<p>This app only scans up to 500 pages. This means any pages after 500 will get cut off and will not display in the app.</p>
   <h2>Delete App</h2>
-  <p>To remove this app from your website, go to the Settings tab and click the Delete button. {% include "/_System/apps/solid-app-framework/_assets/app/_delete-message.inc" %}
+  <p>To remove this app from your website, go to the Settings tab and click the Delete button. {% include "/_System/apps/{{appKey}}/_assets/app/_delete-message.inc" %}
 </div>
 </body>
 </html>
