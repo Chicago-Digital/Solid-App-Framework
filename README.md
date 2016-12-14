@@ -1,5 +1,5 @@
 # Solid-App-Framework
-A simple starting Adobe Business Catalyst app framework by Solid Sky
+A simple starting Adobe Business Catalyst app framework by Solid Sky to get your started building apps for the BC App Store.
 ## Getting Started
 * Create new app in Partner Portal
 * Create new site in BC (to use as a sandbox)
@@ -12,6 +12,10 @@ A simple starting Adobe Business Catalyst app framework by Solid Sky
 * Update Manifest Json
 * Upload to new site
 
-## Before Finalizing
+## Before Finalizing 
 *	Make sure the delete message is correct and update if not (_assets/app/_delete-message.inc)
 *	Make sure instructions.html file is thorough and complete 
+* Make sure the version number in the app matches the version number in your BC Partner Portal and the version number submitted to the BC App Store
+
+## Interested in Selling Apps on the BC App Store?
+Signup to become an app developer here: https://www.bcappstore.com/develop-apps
