@@ -2,6 +2,8 @@
 A simple starting Adobe Business Catalyst app framework by Solid Sky
 ## Getting Started
 * Create new app in Partner Portal
+* Create new site in BC (to use as a sandbox)
+* Enable Liquid on that site
 *	Download framework
 * Load into local version of your site
 *	Update app folder name to match your app key
