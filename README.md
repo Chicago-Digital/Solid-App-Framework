@@ -4,14 +4,13 @@ A simple starting Adobe Business Catalyst app framework by Solid Sky
 * Create new app in Partner Portal
 * Create new site in BC (to use as a sandbox)
 * Enable Liquid on that site
-*	Download framework
+* Download framework
 * Load into local version of your site
-*	Update app folder name to match your app key
+* Update app folder name to match your app key
 * If using dreamweaver do not let it update the links to the files
-*	Search an replace old app key with new app key for the entire folder
-*	Update Manifest Json
-*	Update menu.json
-*	Upload to new site
+* Update menu.json
+* Update Manifest Json
+* Upload to new site
 
 ## Before Finalizing
 *	Make sure the delete message is correct and update if not (_assets/app/_delete-message.inc)
