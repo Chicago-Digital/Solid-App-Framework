@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+{% include "/_System/apps/solid-app-framework/_assets/app/_head.inc" %}
+</head>
+<body class="pages">
+{% include "/_System/apps/solid-app-framework/_assets/app/_tabs.inc" %}
+<div id="container-body">
+  <h1><span>Page Meta Data</span></h1>
+  <div class="pageBodyLoading hide"><p>Loading Items</p></div>
+  <div class="pageBody hide">
+  <div class="RadGrid RadGrid_Default">
+    <table class="rgMasterTable tablesorter" id="myTable" cellpadding="0" cellspacing="0" width="760">
+      <!-- Table header -->
+      <thead>
+      <tr>
+          <th class="rgHeader"><a href="#">Name</a></th>
+          <th class="rgHeader"><a href="#">Title ({{appSettings.pageTitleLength}} chars)</a></th>
+          <th class="rgHeader"><a href="#">Description ({{appSettings.metaDescriptionLength}} chars)</a></th>
+          <th class="rgHeader"><a href="#">URL ({{appSettings.urlLength}} chars)</a></th>
+          <th class="rgHeader"><a href="#">Display</a></th>
+          <th class="rgHeader"><a href="#">Exclude from Search</a></th>
+          <th class="rgHeader {sorter: false}">Preview</th>
+        </tr>
+      </thead>
+      <tbody class="itemList">
+      </tbody>
+    </table>
+    <button class="refresh-app btn call-to-action">Refresh Data</button>
+  </div>
+  <h1 id="totalPageIssues"><span class="noPadding">Total Page Issues</span><span class="errorCount"></span></h1>
+  {% include "/_System/apps/solid-app-framework/_assets/app/page-issues.inc" %}
+</div>
+	</div>
+</body>
+</html>

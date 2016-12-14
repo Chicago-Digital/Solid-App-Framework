@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+{% include "/_System/apps/solid-app-framework/_assets/app/_head.inc" %}
+</head>
+<body>
+{% include "/_System/apps/solid-app-framework/_assets/app/_tabs.inc" %}
+<div id="container-body">
+  <h1><span>{{appManifest.name}} - Version {{appManifest.version}}</span></h1>
+  <h2>Description</h2>
+  <p>This app is meant to make improving your meta tags across your website quicker and easier. This app will scan pages and  will show you the relevant data associated with the page so you can discover which items need to be updated.</p>
+  <h2>Details</h2>
+  <p><strong>This app uses the following default guidelines for evaluating a page:</strong>
+  <ol>
+    <li>Page Title exists and is between 8 and 70 characters</li>
+    <li>Meta Description exists and is less than 160 characters</li>
+    <li>URL exists and is less than 70 characters</li>
+    <li>URL should not contain a file extension, expect for index files (ex .html)</li>
+  </ol>
+  </p>
+  <p><strong>What gets evaluated?</strong>
+	<p>Pages that are live and not set to be excluded from search engines</p>
+  <h2>Important</h2>
+  <p>This app scans the pages using the API and does not scan the final output of the page. This means that this app does not check that the Page Title and Meta Descriptions are actually being outputted on the pages correctly.</p>
+  <h2>Settings</h2>
+  <p>>Using the settings tab, you can change the values used to evaluate the page data: page title length, meta description length, and URL length</p>
+  <h2>Limitations</h2>
+	<p>This app only scans up to 500 pages. This means any pages after 500 will get cut off and will not display in the app.</p>
+  <h2>Delete App</h2>
+  <p>To remove this app from your website, go to the Settings tab and click the Delete button. {% include "/_System/apps/solid-app-framework/_assets/app/_delete-message.inc" %}
+</div>
+</body>
+</html>

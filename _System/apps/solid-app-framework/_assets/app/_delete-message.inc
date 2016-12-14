@@ -1,0 +1,1 @@
+Removing this application will delete the app and all app files. No modifications will be made to your site other than removing the app.

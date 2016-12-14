@@ -1,0 +1,15 @@
+{
+    "menu-bcas-apps": {
+        "weight": 600000,
+        "title": "Apps",
+        "icon": "_config/icon.png"
+      },
+    "menu-solid-app-framework": {
+        "parent": "menu-bcas-apps",
+        "weight": 5,
+        "title": "Solid App Framework",
+        "attr": {
+            "href": "/Admin/AppLoader.aspx?client_id=solid-app-framework"
+        }
+    }
+}

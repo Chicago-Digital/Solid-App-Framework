@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+{% include "/_System/apps/solid-app-framework/_assets/app/_head.inc" %}
+</head>
+<body>
+{% include "/_System/apps/solid-app-framework/_assets/app/_tabs.inc" %}
+<div id="container-body">
+  <h1><span>{{appManifest.name}} Settings</span></h1>
+  <form id="appSettingsForm">
+    <p>
+      <label for="siteID">Page Title Length</label>
+      <input type="text" id="pageTitleLength" name="pageTitleLength" value="{{appSettings.pageTitleLength}}"/>
+    </p>
+    <p>
+      <label for="siteID">Meta Description Length</label>
+      <input type="text" id="metaDescriptionLength" name="metaDescriptionLength" value="{{appSettings.metaDescriptionLength}}"/>
+    </p>
+    <p>
+      <label for="siteID">URL Length</label>
+      <input type="text" id="urlLength" name="urlLength" value="{{appSettings.urlLength}}"/>
+    </p>
+    <p class="submit">
+      <input type="submit" value="Save"/>
+      <span id="confirmation"></span> </p>
+  </form>
+{% include "/_System/apps/solid-app-framework/_assets/app/_delete.inc" %}
+</div>
+</body>
+</html>
