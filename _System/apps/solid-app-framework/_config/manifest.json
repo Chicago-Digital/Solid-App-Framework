@@ -1,4 +1,15 @@
 {
 	"name":"Solid App Framework",
-	"version":"1.1"
+	"version":"1.2",
+	"versionNotes":"<ul><li>Fixed Delete button redirect</li><li>Removed dependancies on BC DSK, Backbone and Underscore</li><li>Added new recursive getAllItems function to work with any BC GET API Call</li></ul>",
+	"versionLog":[
+		{
+			"number":"1.1",
+			"notes": "Updated so developer does not need to find and replace app key. All that is needed is placing the app key in the menu.json"
+		},
+		{
+			"number":"1.0",
+			"notes": "Initial public release"
+		}
+	]
 }

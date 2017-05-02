@@ -22,12 +22,19 @@
   </p>
   <p><strong>What gets evaluated?</strong>
 	<p>Pages that are live and not set to be excluded from search engines</p>
-  <h2>Important</h2>
-  <p>This app scans the pages using the API and does not scan the final output of the page. This means that this app does not check that the Page Title and Meta Descriptions are actually being outputted on the pages correctly.</p>
+  <h2>New in Version {{appManifest.version}}</h2>
+	<p>{{appManifest.versionNotes}}</p>
+  <h2>Past Versions</h2>
+	{% if appManifest.versionLog -%}
+		{% for version in appManifest.versionLog -%}
+	<h5>{{version.number}}</h5>
+	<p>{{version.notes}}</p>
+		{% endfor -%}
+	{% endif -%}
   <h2>Settings</h2>
-  <p>>Using the settings tab, you can change the values used to evaluate the page data: page title length, meta description length, and URL length</p>
+  <p>Using the settings tab, you can change the values used to evaluate the page data: page title length, meta description length, and URL length</p>
   <h2>Limitations</h2>
-	<p>This app only scans up to 500 pages. This means any pages after 500 will get cut off and will not display in the app.</p>
+	<p>This is a good place to put the limitation of the app</p>
   <h2>Delete App</h2>
   <p>To remove this app from your website, go to the Settings tab and click the Delete button. {% include "/_System/apps/{{appKey}}/_assets/app/_delete-message.inc" %}
 </div>

@@ -1,37 +1,68 @@
 $(document).ready(function(){
-	//global vars
-	var appSettings = {};
+	// *** global framework variables ***
+	var _appSettings,_apiCalls = {};
 	var _appKey = $("body").attr('data-appKey');
 	var _mainAppFolderLoc = '/_System/apps/'+_appKey+'/';
-	var _mainAppFolder = new BCAPI.Models.FileSystem.Folder(_mainAppFolderLoc);
 	var _authorization = {"Authorization": $.cookie('access_token')};
 	var _$deleteButtonSelector = '.delete-app';
-	$.getJSON(_mainAppFolderLoc+"_config/settings.json", function(doc) {appSettings = doc;});
-	var pageOrder = "pageURL";
-	var siteURL = "";
-	var publicURL = "";
+	var _secureURL = "";
+	var _publicURL = "";
+	$.getJSON(_mainAppFolderLoc+"_config/settings.json", function(doc) {
+		_appSettings = doc;
+		$.getJSON(_mainAppFolderLoc+"_assets/js/apiCalls.json", function(doc) {
+			_apiCalls = doc;
+			var request = $.ajax({
+				"url": "/api/v2/admin/sites/current",
+				"headers": _authorization,
+				"contentType": "application/json"
+			})
+			request.done(function (msg) {
+				for (i in msg.siteLinks)
+				{
+					if (msg.siteLinks[i].rel == "secureUrl") _secureURL = msg.siteLinks[i].uri.substring(0, msg.siteLinks[i].uri.length - 1);
+					if (msg.siteLinks[i].rel == "publicUrl") _publicURL = msg.siteLinks[i].uri.substring(0, msg.siteLinks[i].uri.length - 1);
+				}
+				appBody();
+			})
+		});
+	});
+	
+	// *** global app variables ***
 	var numMissingTitle = numMissingDescription = numTitleLong = numTitleShort =numDescriptionLong = numURLLong = numURLBad = numFileExt = 0;
 
 	appTabSelector();
-	deleteApp();
-	appSettingsForm();
-	$('.refresh-app').click(function() {
-		$(".itemList").html("");
-		runScan();
-	});
-	var request = $.ajax({
-		"url": "/api/v2/admin/sites/current",
-		"headers": _authorization,
-		"contentType": "application/json"
-	})
-	request.done(function (msg) {
-		for (i in msg.siteLinks)
-		{
-			if (msg.siteLinks[i].rel == "secureUrl") siteURL = msg.siteLinks[i].uri.substring(0, msg.siteLinks[i].uri.length - 1);
-			if (msg.siteLinks[i].rel == "publicUrl") publicURL = msg.siteLinks[i].uri.substring(0, msg.siteLinks[i].uri.length - 1);
+	
+	// This executes once all the initial AJAX calls are made to make sure the variables are ready to use
+	// Place your app code in this function
+	function appBody(){
+		if ($(".pages").length > 0){
+		clearErrors();
+		$(".pageBody").hide();
+		$(".pageBodyLoading").show();
+		getAllItems(_apiCalls.pages,displayPages);
+			
 		}
-		runScan();
-	})
+		$('.refresh-app').click(function() {
+			$(".itemList").html("");
+			appBody();
+		});
+		$(document).one("ajaxStop", function(){
+			$("#myTable").tablesorter({
+				sortList: [[3,0],[0,0]] 
+			});
+			$(".pageBodyLoading").hide();
+			showErrors();
+			$(".pageBody").show();
+			$(".export").click(function(){
+				$('.rgMasterTable').TableCSVExport({
+				delivery: 'download',
+				filename: 'site-content.csv'
+				});	
+			})
+		});
+		deleteApp();
+		appSettingsForm();
+	}
 
 	// Standard App Functions
 	var APIerrorCall = function (jqXHR,textStatus,errorThrown){
@@ -47,15 +78,20 @@ $(document).ready(function(){
 	function deleteApp($selector){
 		var deleteButton = $selector || _$deleteButtonSelector;
 		$(deleteButton).click(function() {
-			console.log("click");
 			var prompt = window.prompt('To confirm type DELETE');
 			if (prompt === 'DELETE') {
-				_mainAppFolder.destroy().done(function() {
-					window.top.location.href = BCAPI.Helper.Site.getRootUrl();
-				});
+				var request = $.ajax({
+					url: "/api/v2/admin/sites/current/storage"+_mainAppFolderLoc,
+					type: "DELETE",
+					headers: _authorization
+				})
+				request.done(function (msg) {
+					window.top.location.href = _secureURL+"/Admin/Dashboard_Business.aspx";			 
+				})
 			} else if (prompt !== null) {
 				window.alert('You must type \'DELETE\' (case sensitive) to proceed.');
 			}
+			
 		 });
 	}
 	function appSettingsForm($formSelector,$confirmTextSelector){
@@ -85,83 +121,81 @@ $(document).ready(function(){
 		});
 		return json;
 	}
-	// Solid Meta Tags Functions
-	function runScan(){
-		clearErrors();
-		if ($(".pages").length > 0){
-			var pages_request = $.ajax({
-				url: "/webresources/api/v3/sites/current/pages?limit=500&order=name",
-				type: "GET",
-				connection: "keep-alive",    
-				contentType: "application/json",
-				mimeType: "application/json ",
-				headers: _authorization
-			})
-			$(".pageBody").hide();
-			$(".pageBodyLoading").show();
-			pages_request.done(function (msg) {
-
-				for (var i = 0; i < msg.items.length; i++)
+	
+	// displayPages recursive function to handle unlimited number of pages
+	function getAllItems(APIurl,callback,recursiveURL){
+		var apiCall_limit = 500;
+		var itemsURL = recursiveURL || APIurl+"?limit="+apiCall_limit; 	
+		var items_request = $.ajax({
+			url: itemsURL,
+			type: "GET",
+			connection: "keep-alive",
+			contentType: "application/json",
+			"headers": _authorization
+		});
+			items_request.done(function (itemsCall) {
+				for (var i = 0; i < itemsCall.items.length; i++)
 				{
-					var page = msg.items[i];
-					var pageError = false;
-					var seoPageTitleLength = "", seoMetaDescriptionLength = "";
-					if (!page.pageUrl.includes('_System'))
-					{
-						var pageDisplay = "live";
-						if (!page.displayable) pageDisplay = "draft";
-						else if(!page.enabled) pageDisplay = "disabled";
-
-						if (page.title.length > 0) seoPageTitleLength = " (" + page.title.length + ")";
-						if (page.seoMetadataDescription.length > 0) seoMetaDescriptionLength = " (" + page.seoMetadataDescription.length + ")";
-
-						$tableRow = $("<tr class='rgRow' id='page-"+page.id+"'></tr>");
-						$column1 = $("<td class='pageName'>"+page.name+"</td>");
-						$column2 = $("<td class='pageTitle'>"+page.title+seoPageTitleLength+"</td>");
-						$column3 = $("<td class='pageMetaDescription'>"+page.seoMetadataDescription+seoMetaDescriptionLength+"</td>");
-						$column4 = $("<td class='pageItemUrl'>"+page.pageUrl+" ("+page.pageUrl.length+")</td>");
-						$column5 = $("<td class='pageDisplay'>"+pageDisplay+"</td>");
-						$column6 = $("<td class='pageExclude'>"+page.excludeFromSearch+"</td>");
-						$column7 = $("<td><a target='_blank' href='"+siteURL+page.pageUrl+"?Preview=True'>Preview</a> | <a target='_blank' href='"+siteURL+"/Admin/WebPages_Detail.aspx?PageID="+page.id+"'>Edit</a></td>");
-
-						if (pageDisplay == "live" && !page.excludeFromSearch)
-						{
-							var titleError = !checkTitle(page.title);
-							if (titleError) $column2.addClass("error");
-							var descriptionError = !checkMetaDescription(page.seoMetadataDescription);
-							if (descriptionError) $column3.addClass("error");
-							var URLError = !checkURL(page.pageUrl);
-							if (URLError) $column4.addClass("error");
-							if (titleError || descriptionError || URLError) $tableRow.addClass("rgWarning");
-
-						}
-						$tableRow.append($column1,$column2,$column3,$column4,$column5,$column6,$column7);
-						$('.itemList').append($tableRow);
-					}
+					callback(itemsCall.items[i]);
 				}
-				showErrors();
-				$("#myTable").tablesorter();
-				$(".pageBodyLoading").hide();
-				$(".pageBody").show();
+				if (itemsCall.limit + itemsCall.skip <= itemsCall.totalItemsCount){
+					var apiCall_skip = itemsCall.limit + itemsCall.skip;
+					getAllItems(APIurl,callback,APIurl+"?limit="+apiCall_limit+"&skip="+apiCall_skip);
+				}
 			})
-		} // end Pages
 	}
+	
+	// Solid Meta Tags Functions
+	
+	function displayPages(page){
+		var pageError = false;
+		var seoPageTitleLength = "", seoMetaDescriptionLength = "";
+		if (!page.pageUrl.includes('_System'))
+		{
+			var pageDisplay = "live";
+			if (!page.displayable) pageDisplay = "draft";
+			else if(!page.enabled) pageDisplay = "disabled";
+			if (page.title.length > 0) seoPageTitleLength = " (" + page.title.length + ")";
+			if (page.seoMetadataDescription.length > 0) seoMetaDescriptionLength = " (" + page.seoMetadataDescription.length + ")";
+			$tableRow = $("<tr class='rgRow' id='page-"+page.id+"'></tr>");
+			$dataName = $("<td class='pageName'>"+page.name+"</td>");
+			$dataTitle = $("<td class='pageTitle'>"+page.title+seoPageTitleLength+"</td>");
+			$dataDescription = $("<td class='pageMetaDescription'>"+page.seoMetadataDescription+seoMetaDescriptionLength+"</td>");
+			$dataURL = $("<td class='pageItemUrl'>"+page.pageUrl+" ("+page.pageUrl.length+")</td>");
+			$dataDisplay = $("<td class='pageDisplay'>"+pageDisplay+"</td>");
+			$dataExclude = $("<td class='pageExclude'>"+page.excludeFromSearch+"</td>");
+			$dataPreview = $("<td><a target='_blank' href='"+_publicURL+page.pageUrl+"?Preview=True'>Preview</a> | <a target='_blank' href='"+_secureURL+"/Admin/WebPages_Detail.aspx?PageID="+page.id+"'>Edit</a></td>");
+			$tableRow.append($dataName,$dataTitle,$dataDescription,$dataURL,$dataDisplay,$dataExclude,$dataPreview);
+			$('.itemList').append($tableRow);
+			if (pageDisplay == "live" && !page.excludeFromSearch)
+			{
+			var titleError = !checkTitle(page.title);
+			if (titleError) $dataTitle.addClass("error");
+			var descriptionError = !checkMetaDescription(page.seoMetadataDescription);
+			if (descriptionError) $dataDescription.addClass("error");
+			var URLError = !checkURL(page.pageUrl);
+			if (URLError) $dataURL.addClass("error");
+			if (titleError || descriptionError || URLError) $tableRow.addClass("rgWarning");
+			}
+		}
+	}
+	
 	function checkTitle(title){
 		if (!title){numMissingTitle++; return false;}
 		else if (title.length == 0){numMissingTitle++; return false;}
 		else if (title.length < 8){numTitleShort++; return false;}
-		else if (title.length > appSettings.pageTitleLength){numTitleLong++; return false;}
+		else if (title.length > _appSettings.pageTitleLength){numTitleLong++; return false;}
 		else return true;
 	}
 	function checkMetaDescription(description){
 		if (!description){numMissingDescription++; return false;}
 		else if (description.length == 0){numMissingDescription++; return false;}
-		else if (description.length > appSettings.metaDescriptionLength){numDescriptionLong++}
+		else if (description.length > _appSettings.metaDescriptionLength){numDescriptionLong++}
 		else return true;
 	}
 	function checkURL(link){
 		if (!link || link.includes("/?/")){numURLBad++;return false;}
-		else if (link.length > appSettings.urlLength){numURLLong++; return false;}
+		else if (link.length > _appSettings.urlLength){numURLLong++; return false;}
 		if (link.includes(".") && !link.includes("index")){numFileExt++; return false;}
 		else return true;
 	}
@@ -179,4 +213,4 @@ $(document).ready(function(){
 		$('#ePageURLCount .errorCount').html(" ("+numFileExt+")");
 		$('#totalPageIssues .errorCount').html(" ("+(numMissingTitle+numTitleShort+numTitleLong+numMissingDescription+numDescriptionLong+numURLLong+numFileExt+numURLBad)+")");
 	}
-	});
+});
