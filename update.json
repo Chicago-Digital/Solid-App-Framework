@@ -1,0 +1,28 @@
+{
+  "AddOrUpdate": [
+    "/_System/Apps/solid-app-framework/index.html",
+    "/_System/Apps/solid-app-framework/instructions.html",
+    "/_System/Apps/solid-app-framework/settings.html",
+	"/_System/Apps/solid-app-framework/_assets/app/_delete-message.inc",
+	"/_System/Apps/solid-app-framework/_assets/app/_delete.inc",
+	"/_System/Apps/solid-app-framework/_assets/app/_head.inc",
+	"/_System/Apps/solid-app-framework/_assets/app/_tabs.inc",
+	"/_System/Apps/solid-app-framework/_assets/app/page-issues.inc",
+	"/_System/Apps/solid-app-framework/_assets/css/app.css",
+	"/_System/Apps/solid-app-framework/_assets/fonts/glyphicons-halflings-regular.eot",
+	"/_System/Apps/solid-app-framework/_assets/fonts/glyphicons-halflings-regular.svg",
+	"/_System/Apps/solid-app-framework/_assets/fonts/glyphicons-halflings-regular.ttf",
+	"/_System/Apps/solid-app-framework/_assets/fonts/glyphicons-halflings-regular.woff",
+	"/_System/Apps/solid-app-framework/_assets/js/apiCalls.json",
+	"/_System/Apps/solid-app-framework/_assets/js/app.js",
+	"/_System/Apps/solid-app-framework/_assets/js/jquery.tablesorter.min.js",
+	"/_System/Apps/solid-app-framework/_config/icon.png",
+	"/_System/Apps/solid-app-framework/_config/manifest.json",
+	"/_System/Apps/solid-app-framework/_config/menu.json",
+	"/_System/Apps/solid-app-framework/_config/settings.json"
+  ],
+  "DoNothing": [],
+  "CopyMove": [],
+  "DeleteFile": [],
+  "DeleteFolder": []
+}
